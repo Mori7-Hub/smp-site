@@ -145,8 +145,11 @@
   .maxime { margin-top: 1.5rem; padding: 1.5rem; background: var(--white); border-left: 6px solid var(--andon); }
   .maxime h3 { font-family: var(--display); font-size: 1.25rem; line-height: 1.25; margin: 0 0 .5rem; }
   .maxime p { margin: 0; font-size: 1rem; }
-  /* Grand écran : largeur d'un encadré (même gouttière de 1.5rem), centré sous les deux. */
-  @media (min-width: 761px) { .maxime { width: calc((100% - 1.5rem) / 2); margin-left: auto; margin-right: auto; } }
+  /* Dans la section Contact, la maxime occupe la colonne de droite ; elle garde sa facture d'encadré clair. */
+  .contact-grille { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 3rem; align-items: center; }
+  .contact .maxime { margin-top: 0; color: var(--ink); }
+  .contact .maxime p { color: var(--ink); margin: 0; max-width: none; }
+  @media (max-width: 760px) { .contact-grille { grid-template-columns: 1fr; gap: 1rem; } }
 
   .contact { background: var(--ink); color: var(--white); padding: 4.5rem 0; }
   .contact h2 { font-family: var(--display); font-size: clamp(1.9rem, 3.5vw, 2.6rem); margin: 0 0 1rem; max-width: 22ch; line-height: 1.1; }
@@ -251,10 +254,6 @@
         <p>On simplifie le processus, puis on choisit ou construit l'outil qui s'adapte aux besoins de l'équipe.</p>
       </div>
     </div>
-    <div class="maxime">
-      <h3>Le bon niveau d'IA, au bon endroit, en juste quantité.</h3>
-      <p>Mettre de l'IA partout, c'est s'embarquer dans des coûts qui deviennent vite exponentiels. Comme en Lean, on l'applique là où elle règle un problème mesuré, et nulle part ailleurs.</p>
-    </div>
   </div>
 </section>
 
@@ -310,7 +309,8 @@
 </section>
 
 <section class="contact" id="contact">
-  <div class="wrap">
+  <div class="wrap contact-grille">
+    <div>
     <h2>Parlons de votre production.</h2>
     <p>Décrivez-moi en quelques lignes ce qui vous ralentit. Je vous réponds avec une première lecture de la situation, sans engagement.</p>
     <a class="btn" href="mailto:antoine.morissette@smpsolutionsnumeriques.ca?subject=Demande%20de%20diagnostic">Écrire à Antoine</a>
@@ -319,6 +319,11 @@
       <button type="button" class="copier" id="copier">Copier l'adresse</button>
     </div>
     <p class="copie-etat" id="copie-etat" role="status" aria-live="polite"></p>
+    </div>
+    <div class="maxime">
+      <h3>Le bon niveau d'IA, au bon endroit, en juste quantité.</h3>
+      <p>Mettre de l'IA partout, c'est s'embarquer dans des coûts qui deviennent vite exponentiels. Comme en Lean, on l'applique là où elle règle un problème mesuré, et nulle part ailleurs.</p>
+    </div>
   </div>
 </section>
 
