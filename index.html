@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SMP Solutions numériques — Optimiser vos processus, puis les automatiser</title>
+<meta name="description" content="Accompagnement Lean, implantation de logiciels, automatisation et IA pour les PME manufacturières de la Beauce.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%231F2A33'/><rect x='7' y='14' width='18' height='4' fill='%23F2B705'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1F2A33;
+    --steel: #3E5C76;
+    --paper: #F2F4F3;
+    --line: #C9D3DA;
+    --andon: #F2B705;
+    --white: #FFFFFF;
+    --display: "Barlow Semi Condensed", "Arial Narrow", Arial, sans-serif;
+    --body: "Barlow", "Segoe UI", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+  a { color: var(--steel); }
+  a:focus-visible, .btn:focus-visible { outline: 3px solid var(--andon); outline-offset: 3px; }
+  .wrap { max-width: 68rem; margin: 0 auto; padding: 0 1.5rem; }
+
+  header.top {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.25rem 0;
+  }
+  .brand { font-family: var(--display); font-weight: 700; font-size: 1.25rem; color: var(--ink); text-decoration: none; }
+  .brand span { display: inline-block; width: 1.4rem; height: .35rem; background: var(--andon); margin-right: .5rem; vertical-align: middle; }
+  nav a { margin-left: 1.5rem; text-decoration: none; color: var(--ink); font-weight: 500; }
+  nav a:hover { color: var(--steel); }
+
+  .hero { padding: 4rem 0 3rem; }
+  .hero h1 {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(2.6rem, 6vw, 4.6rem); line-height: 1.02;
+    margin: 0 0 1.5rem; max-width: 14ch; letter-spacing: -.01em;
+  }
+  .hero p { max-width: 38rem; margin: 0 0 2rem; font-size: 1.25rem; }
+  .btn {
+    display: inline-block; background: var(--ink); color: var(--white);
+    font-family: var(--display); font-weight: 700; font-size: 1.15rem;
+    padding: .85rem 1.6rem; text-decoration: none; border-radius: 2px;
+  }
+  .btn:hover { background: var(--steel); }
+
+  /* La chaîne de valeur : l'élément signature de la page */
+  .stream { margin-top: 3.5rem; }
+  .stream ol {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-top: 6px solid var(--ink); counter-reset: etape;
+  }
+  .stream li { position: relative; padding: 1.4rem 1.25rem 0 0; counter-increment: etape; }
+  .stream li::before {
+    content: counter(etape); position: absolute; top: -1.05rem; left: 0;
+    width: 2rem; height: 2rem; border-radius: 50%;
+    background: var(--paper); border: 6px solid var(--ink);
+    font-family: var(--display); font-weight: 700; font-size: .9rem;
+    display: grid; place-items: center; line-height: 1;
+  }
+  .stream li:first-child::before { background: var(--andon); }
+  .stream h3 { font-family: var(--display); font-size: 1.35rem; margin: .6rem 0 .3rem; }
+  .stream p { margin: 0; font-size: 1rem; color: var(--steel); }
+
+  section.block { padding: 4.5rem 0; border-top: 1px solid var(--line); }
+  section.block h2 {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(1.9rem, 3.5vw, 2.6rem); line-height: 1.1; margin: 0 0 1.25rem; max-width: 22ch;
+  }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+  .cols p { margin: 0 0 1rem; max-width: 34rem; }
+
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+  .compare div { padding: 1.5rem; background: var(--white); border-left: 6px solid var(--line); }
+  .compare div.ours { border-left-color: var(--andon); }
+  .compare h3 { font-family: var(--display); font-size: 1.25rem; margin: 0 0 .5rem; }
+  .compare p { margin: 0; font-size: 1rem; }
+
+  .contact { background: var(--ink); color: var(--white); padding: 4.5rem 0; }
+  .contact h2 { font-family: var(--display); font-size: clamp(1.9rem, 3.5vw, 2.6rem); margin: 0 0 1rem; max-width: 22ch; line-height: 1.1; }
+  .contact p { max-width: 36rem; margin: 0 0 2rem; color: var(--line); }
+  .contact .btn { background: var(--andon); color: var(--ink); }
+  .contact .btn:hover { background: var(--white); }
+  .contact a.mail { color: var(--white); display: block; margin-top: 1rem; overflow-wrap: anywhere; }
+
+  footer { padding: 2rem 0; font-size: .95rem; color: var(--steel); }
+
+  @media (max-width: 760px) {
+    nav { display: none; }
+    .hero { padding-top: 2.5rem; }
+    .stream ol { grid-template-columns: 1fr; border-top: none; border-left: 6px solid var(--ink); margin-left: 1rem; }
+    .stream li { padding: 0 0 1.75rem 1.75rem; }
+    .stream li::before { top: 0; left: -1.45rem; }
+    .stream h3 { margin-top: 0; }
+    .cols, .compare { grid-template-columns: 1fr; gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="#"><span aria-hidden="true"></span>SMP Solutions numériques</a>
+    <nav aria-label="Navigation principale">
+      <a href="#parcours">Services</a>
+      <a href="#approche">Approche</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Optimiser vos processus, puis les automatiser.</h1>
+      <p>J'accompagne les PME manufacturières de la Beauce : on élimine d'abord le gaspillage avec le Lean, puis on implante les logiciels, l'automatisation et l'IA qui font vraiment une différence.</p>
+      <a class="btn" href="#contact">Demander un diagnostic</a>
+
+      <div class="stream" id="parcours">
+        <ol>
+          <li>
+            <h3>Diagnostic Lean</h3>
+            <p>J'observe vos processus sur le plancher et je repère le gaspillage. Prix fixe, rapport clair.</p>
+          </li>
+          <li>
+            <h3>Implantation</h3>
+            <p>Quand un logiciel existant répond au besoin, je vous aide à le choisir et à le mettre en place.</p>
+          </li>
+          <li>
+            <h3>Automatisation et IA</h3>
+            <p>Les tâches répétitives repérées au diagnostic sont confiées à des automatisations et des agents IA.</p>
+          </li>
+          <li>
+            <h3>Sur mesure</h3>
+            <p>Quand rien n'existe pour votre besoin, je développe l'application qu'il vous faut.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+  </main>
+</div>
+
+<section class="block" id="approche">
+  <div class="wrap">
+    <h2>Automatiser un mauvais processus, c'est faire des erreurs plus vite.</h2>
+    <div class="cols">
+      <div>
+        <p>Beaucoup de projets informatiques déçoivent parce qu'on numérise la façon de faire actuelle, avec tous ses détours et ses doubles saisies.</p>
+        <p>Formé et certifié en amélioration continue, je commence par comprendre comment votre production fonctionne vraiment. Ensuite seulement, on parle de technologie.</p>
+      </div>
+      <div>
+        <p>Vous n'achetez que ce qui règle un problème mesuré. Vous pouvez arrêter après le diagnostic : le rapport vous appartient.</p>
+        <p>Et comme je développe moi-même les solutions recommandées, la personne qui analyse est aussi celle qui livre.</p>
+      </div>
+    </div>
+    <div class="compare">
+      <div>
+        <h3>L'approche habituelle</h3>
+        <p>On choisit un logiciel, on l'installe, puis on adapte l'équipe à l'outil.</p>
+      </div>
+      <div class="ours">
+        <h3>L'approche SMP</h3>
+        <p>On simplifie le processus, puis on choisit ou construit l'outil qui s'adapte à l'équipe.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <h2>Parlons de votre production.</h2>
+    <p>Décrivez-moi en quelques lignes ce qui vous ralentit. Je vous réponds avec une première lecture de la situation, sans engagement.</p>
+    <a class="btn" href="mailto:antoine.morissette@smpsolutionsnumeriques.ca?subject=Demande%20de%20diagnostic">Écrire à Antoine</a>
+    <a class="mail" href="mailto:antoine.morissette@smpsolutionsnumeriques.ca">antoine.morissette@smpsolutionsnumeriques.ca</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">SMP Solutions numériques, entreprise basée en Beauce, Québec.</div>
+</footer>
+
+</body>
+</html>
