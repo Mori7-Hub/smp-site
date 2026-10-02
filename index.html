@@ -84,17 +84,23 @@
     background: var(--paper); border: 6px solid var(--ink);
     font-family: var(--display); font-weight: 700; font-size: .9rem;
     display: grid; place-items: center; line-height: 1;
-    transition: background-color .25s ease, border-color .25s ease, transform .25s ease;
+    z-index: 2; /* les pastilles passent devant la barre jaune */
+    transition: background-color .7s ease, border-color .7s ease, transform .7s ease;
   }
   .stream li:first-child::before { background: var(--andon); }
-  .stream li.allume::before { background: var(--andon); border-color: var(--andon); transform: scale(1.12); }
-  /* Pulsation qui parcourt le trait une seule fois, au démarrage de la ligne (JS, désactivée si prefers-reduced-motion). */
+  .stream li.allume::before {
+    background: var(--andon); border-color: var(--andon); transform: scale(1.12);
+    transition-duration: .2s; /* s'allume vite quand la barre arrive, s'éteint lentement */
+  }
+  /* Barre qui parcourt le trait une seule fois, derrière les pastilles (JS, désactivée si prefers-reduced-motion).
+     Vitesse constante : le JS allume chaque pastille au moment où la barre l'atteint. */
   .stream__pulse {
     position: absolute; top: 0; left: 0; width: 0; height: 6px;
-    background: var(--andon); pointer-events: none; z-index: 2;
-    transition: width 1.1s ease-out, opacity .5s ease 1.1s;
+    background: var(--andon); pointer-events: none; z-index: 1;
+    transition: width var(--duree-ligne, 1.8s) linear, opacity .8s ease;
   }
-  .stream.actif .stream__pulse { width: 100%; opacity: 0; }
+  .stream.actif .stream__pulse { width: 100%; }
+  .stream.fini .stream__pulse { opacity: 0; }
   .stream h3 { font-family: var(--display); font-size: 1.35rem; margin: .6rem 0 .3rem; }
   .stream p { margin: 0; font-size: 1rem; color: var(--steel); }
 
@@ -158,8 +164,8 @@
     .stream h3 { margin-top: 0; }
     .cols, .compare { grid-template-columns: 1fr; gap: 1.5rem; }
     .calc { grid-template-columns: 1fr; }
-    .stream__pulse { top: 0; left: 1rem; width: 6px; height: 0; transition: height 1.1s ease-out, opacity .5s ease 1.1s; }
-    .stream.actif .stream__pulse { height: 100%; width: 6px; opacity: 0; }
+    .stream__pulse { top: 0; left: 1rem; width: 6px; height: 0; transition: height var(--duree-ligne, 1.8s) linear, opacity .8s ease; }
+    .stream.actif .stream__pulse { height: 100%; width: 6px; }
   }
   @media (max-width: 400px) {
     .brand { font-size: 1.35rem; gap: .5rem; }
@@ -397,15 +403,24 @@
     var chaine = document.getElementById('parcours');
     if (!chaine || !('IntersectionObserver' in window)) return;
     var pastilles = chaine.querySelectorAll('ol > li');
+    var DUREE = 1800; // ms, doit rester égal à --duree-ligne
+    chaine.style.setProperty('--duree-ligne', DUREE + 'ms');
 
     function demarrer() {
+      // La ligne est horizontale sur grand écran et verticale sur cellulaire :
+      // on mesure où se trouve chaque pastille sur le trait au lieu de le supposer.
+      var vertical = window.getComputedStyle(chaine.querySelector('ol')).gridTemplateColumns.split(' ').length === 1;
+      var longueur = vertical ? chaine.offsetHeight : chaine.offsetWidth;
       chaine.classList.add('actif');
-      pastilles.forEach(function (li, i) {
+      pastilles.forEach(function (li) {
+        var position = vertical ? li.offsetTop : li.offsetLeft;
+        var arrivee = Math.max(0, Math.min(1, position / longueur)) * DUREE;
         setTimeout(function () {
           li.classList.add('allume');
-          setTimeout(function () { li.classList.remove('allume'); }, 260);
-        }, i * 180);
+          setTimeout(function () { li.classList.remove('allume'); }, 450);
+        }, arrivee);
       });
+      setTimeout(function () { chaine.classList.add('fini'); }, DUREE + 150);
     }
 
     var observateur = new IntersectionObserver(function (entrees) {
