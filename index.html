@@ -22,7 +22,12 @@
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .brand svg path { animation: none !important; }
+    .stream__pulse { display: none !important; }
+    .stream li::before { transition: none !important; }
+  }
   body {
     margin: 0;
     background: var(--paper);
@@ -32,7 +37,7 @@
     line-height: 1.6;
   }
   a { color: var(--steel); }
-  a:focus-visible, .btn:focus-visible { outline: 3px solid var(--andon); outline-offset: 3px; }
+  a:focus-visible, .btn:focus-visible, .calc input:focus-visible { outline: 3px solid var(--andon); outline-offset: 3px; }
   .wrap { max-width: 68rem; margin: 0 auto; padding: 0 1.5rem; }
 
   header.top {
@@ -42,6 +47,11 @@
   .brand { font-family: var(--display); font-weight: 700; font-size: 1.25rem; color: var(--ink); text-decoration: none; }
   .brand { display: inline-flex; align-items: center; gap: .6rem; font-size: 1.6rem; line-height: 1; }
   .brand svg { width: 2.1rem; height: 2.1rem; flex: none; }
+  /* Le repère s'aligne une fois au chargement : les deux coins glissent vers le point andon. */
+  .brand svg path:nth-of-type(1) { animation: aligner-coin-haut .5s ease-out; }
+  .brand svg path:nth-of-type(2) { animation: aligner-coin-bas .5s ease-out; }
+  @keyframes aligner-coin-haut { from { transform: translate(-6px, -6px); opacity: .4; } to { transform: none; opacity: 1; } }
+  @keyframes aligner-coin-bas { from { transform: translate(6px, 6px); opacity: .4; } to { transform: none; opacity: 1; } }
   .brand small { font-family: var(--body); font-weight: 500; font-size: 1rem; border-left: 1.5px solid var(--ink); padding-left: .6rem; }
   nav a { margin-left: 1.5rem; text-decoration: none; color: var(--ink); font-weight: 500; }
   nav a:hover { color: var(--steel); }
@@ -61,7 +71,7 @@
   .btn:hover { background: var(--steel); }
 
   /* La chaîne de valeur : l'élément signature de la page */
-  .stream { margin-top: 3.5rem; }
+  .stream { margin-top: 3.5rem; position: relative; }
   .stream ol {
     list-style: none; margin: 0; padding: 0;
     display: grid; grid-template-columns: repeat(4, 1fr);
@@ -74,10 +84,39 @@
     background: var(--paper); border: 6px solid var(--ink);
     font-family: var(--display); font-weight: 700; font-size: .9rem;
     display: grid; place-items: center; line-height: 1;
+    transition: background-color .25s ease, border-color .25s ease, transform .25s ease;
   }
   .stream li:first-child::before { background: var(--andon); }
+  .stream li.allume::before { background: var(--andon); border-color: var(--andon); transform: scale(1.12); }
+  /* Pulsation qui parcourt le trait une seule fois, au démarrage de la ligne (JS, désactivée si prefers-reduced-motion). */
+  .stream__pulse {
+    position: absolute; top: 0; left: 0; width: 0; height: 6px;
+    background: var(--andon); pointer-events: none; z-index: 2;
+    transition: width 1.1s ease-out, opacity .5s ease 1.1s;
+  }
+  .stream.actif .stream__pulse { width: 100%; opacity: 0; }
   .stream h3 { font-family: var(--display); font-size: 1.35rem; margin: .6rem 0 .3rem; }
   .stream p { margin: 0; font-size: 1rem; color: var(--steel); }
+
+  /* Calculateur de coût du gaspillage */
+  .calc { display: grid; grid-template-columns: 1.3fr 1fr; gap: 2.5rem; margin-top: 2rem; align-items: start; }
+  .calc-champs { display: grid; gap: 1.5rem; }
+  .calc-groupe { border: 1px solid var(--line); border-radius: 2px; padding: 1.25rem 1.25rem 1.5rem; margin: 0; }
+  .calc-groupe legend { font-family: var(--display); font-weight: 700; font-size: 1rem; padding: 0 .4rem; color: var(--steel); }
+  .champ { margin-top: .9rem; }
+  .champ:first-of-type { margin-top: .3rem; }
+  .champ label { display: block; font-size: .95rem; margin-bottom: .3rem; }
+  .champ input {
+    width: 100%; font: inherit; font-size: 1rem; color: var(--ink);
+    background: var(--white); border: 1px solid var(--line); border-radius: 2px;
+    padding: .6rem .75rem; min-height: 44px;
+  }
+  .calc-resultat { background: var(--white); border-left: 6px solid var(--andon); padding: 1.75rem; }
+  .calc-montant { margin: 0; font-family: var(--display); font-weight: 700; line-height: 1; }
+  .calc-montant #c-cout { font-size: clamp(2.2rem, 4.5vw, 3rem); }
+  .calc-unite { font-family: var(--body); font-weight: 500; font-size: 1rem; color: var(--steel); }
+  .calc-heures { margin: .4rem 0 1.25rem; color: var(--steel); }
+  .calc-note { margin: 1rem 0 0; font-size: .85rem; color: var(--steel); }
 
   section.block { padding: 4.5rem 0; border-top: 1px solid var(--line); }
   section.block h2 {
@@ -118,6 +157,9 @@
     .stream li::before { top: 0; left: -1.45rem; }
     .stream h3 { margin-top: 0; }
     .cols, .compare { grid-template-columns: 1fr; gap: 1.5rem; }
+    .calc { grid-template-columns: 1fr; }
+    .stream__pulse { top: 0; left: 1rem; width: 6px; height: 0; transition: height 1.1s ease-out, opacity .5s ease 1.1s; }
+    .stream.actif .stream__pulse { height: 100%; width: 6px; opacity: 0; }
   }
   @media (max-width: 400px) {
     .brand { font-size: 1.35rem; gap: .5rem; }
@@ -134,6 +176,7 @@
     <nav aria-label="Navigation principale">
       <a href="#parcours">Services</a>
       <a href="#approche">Approche</a>
+      <a href="#calculateur">Calculateur</a>
       <a href="#contact">Contact</a>
     </nav>
   </header>
@@ -163,6 +206,7 @@
             <p>Quand rien n'existe pour votre besoin, je développe l'application qu'il vous faut.</p>
           </li>
         </ol>
+        <span class="stream__pulse" aria-hidden="true"></span>
       </div>
     </section>
   </main>
@@ -189,6 +233,56 @@
       <div class="ours">
         <h3>L'approche SMP</h3>
         <p>On simplifie le processus, puis on choisit ou construit l'outil qui s'adapte aux besoins de l'équipe.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="calculateur">
+  <div class="wrap">
+    <h2>Combien vous coûte ce gaspillage ?</h2>
+    <p>Entrez vos chiffres : le calcul se fait dans votre navigateur, sur votre appareil seulement.</p>
+
+    <div class="calc">
+      <div class="calc-champs">
+        <fieldset class="calc-groupe">
+          <legend>Temps perdu, par employé, chaque jour (minutes)</legend>
+          <div class="champ">
+            <label for="c-saisie">Double saisie</label>
+            <input type="number" inputmode="numeric" min="0" step="1" id="c-saisie" value="10">
+          </div>
+          <div class="champ">
+            <label for="c-recherche">Recherche d'information</label>
+            <input type="number" inputmode="numeric" min="0" step="1" id="c-recherche" value="15">
+          </div>
+          <div class="champ">
+            <label for="c-attente">Attente</label>
+            <input type="number" inputmode="numeric" min="0" step="1" id="c-attente" value="10">
+          </div>
+        </fieldset>
+
+        <fieldset class="calc-groupe">
+          <legend>Votre équipe</legend>
+          <div class="champ">
+            <label for="c-employes">Employés touchés</label>
+            <input type="number" inputmode="numeric" min="0" step="1" id="c-employes" value="4">
+          </div>
+          <div class="champ">
+            <label for="c-taux">Taux horaire chargé ($)</label>
+            <input type="number" inputmode="numeric" min="0" step="1" id="c-taux" value="35">
+          </div>
+          <div class="champ">
+            <label for="c-jours">Jours travaillés par année</label>
+            <input type="number" inputmode="numeric" min="0" step="1" id="c-jours" value="230">
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="calc-resultat" aria-live="polite">
+        <p class="calc-montant"><span id="c-cout">18 783 $</span> <span class="calc-unite">par année</span></p>
+        <p class="calc-heures"><span id="c-heures">537</span> heures perdues par année</p>
+        <a class="btn" href="#contact">Demander un diagnostic</a>
+        <p class="calc-note">Estimation : rien n'est envoyé ni enregistré, le calcul reste dans votre navigateur.</p>
       </div>
     </div>
   </div>
@@ -241,6 +335,88 @@
         repli();
       }
     });
+  })();
+
+  // Calculateur de coût du gaspillage : tout reste dans le navigateur.
+  // Aucun appel réseau, aucun stockage (localStorage, cookie) — rien à faire
+  // confirmer au titre de la Loi 25 puisqu'aucun renseignement ne sort du poste du visiteur.
+  (function () {
+    var zoneCalc = document.querySelector('.calc');
+    if (!zoneCalc) return;
+    var champCout = document.getElementById('c-cout');
+    var champHeures = document.getElementById('c-heures');
+
+    function versNombre(id, max) {
+      var champ = document.getElementById(id);
+      var valeur = parseFloat(String(champ.value || '').replace(',', '.'));
+      if (!isFinite(valeur) || isNaN(valeur) || valeur < 0) valeur = 0;
+      if (valeur > max) valeur = max;
+      return valeur;
+    }
+    function formaterMilliers(n) {
+      var entier = Math.round(Math.abs(n));
+      var chiffres = String(entier);
+      var resultat = '';
+      for (var i = 0; i < chiffres.length; i++) {
+        if (i > 0 && (chiffres.length - i) % 3 === 0) resultat += ' ';
+        resultat += chiffres[i];
+      }
+      return (n < 0 ? '-' : '') + resultat;
+    }
+    function formaterDollars(n) {
+      return formaterMilliers(n) + ' $';
+    }
+
+    function recalculer() {
+      // Plafonds de sûreté : au-delà, l'aberrant est ramené à une borne plausible
+      // plutôt que de produire un chiffre absurde ou un NaN.
+      var saisie = versNombre('c-saisie', 1440);
+      var recherche = versNombre('c-recherche', 1440);
+      var attente = versNombre('c-attente', 1440);
+      var employes = versNombre('c-employes', 100000);
+      var taux = versNombre('c-taux', 10000);
+      var jours = versNombre('c-jours', 366);
+
+      var minutesParJour = saisie + recherche + attente;
+      var heuresParAn = (minutesParJour * employes / 60) * jours;
+      var cout = heuresParAn * taux;
+
+      champHeures.textContent = formaterMilliers(heuresParAn);
+      champCout.textContent = formaterDollars(cout);
+    }
+
+    zoneCalc.addEventListener('input', recalculer);
+    recalculer();
+  })();
+
+  // La chaîne de valeur s'allume une seule fois, pastille par pastille, quand elle
+  // entre à l'écran — désactivée si la personne a demandé moins de mouvement.
+  (function () {
+    var reduit = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduit) return;
+    var chaine = document.getElementById('parcours');
+    if (!chaine || !('IntersectionObserver' in window)) return;
+    var pastilles = chaine.querySelectorAll('ol > li');
+
+    function demarrer() {
+      chaine.classList.add('actif');
+      pastilles.forEach(function (li, i) {
+        setTimeout(function () {
+          li.classList.add('allume');
+          setTimeout(function () { li.classList.remove('allume'); }, 260);
+        }, i * 180);
+      });
+    }
+
+    var observateur = new IntersectionObserver(function (entrees) {
+      entrees.forEach(function (entree) {
+        if (entree.isIntersecting) {
+          demarrer();
+          observateur.disconnect();
+        }
+      });
+    }, { threshold: 0.35 });
+    observateur.observe(chaine);
   })();
 </script>
 </body>
