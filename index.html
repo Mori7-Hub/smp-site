@@ -129,14 +129,6 @@
   .calc-note { margin: 1rem 0 0; font-size: .85rem; color: var(--steel); }
 
   section.block { padding: 4.5rem 0; border-top: 1px solid var(--line); }
-  /* Bandeau « juste quantité » : le pendant IA de la phrase de l'Approche. */
-  .juste { background: var(--white); border-top: 1px solid var(--line); padding: 3.5rem 0; }
-  .juste .wrap > div { border-left: 6px solid var(--andon); padding-left: 1.5rem; }
-  .juste h2 {
-    font-family: var(--display); font-weight: 700;
-    font-size: clamp(1.9rem, 3.5vw, 2.6rem); line-height: 1.1; margin: 0 0 1rem; max-width: 24ch;
-  }
-  .juste p { margin: 0; max-width: 40rem; }
   section.block h2 {
     font-family: var(--display); font-weight: 700;
     font-size: clamp(1.9rem, 3.5vw, 2.6rem); line-height: 1.1; margin: 0 0 1.25rem; max-width: 22ch;
@@ -149,6 +141,15 @@
   .compare div.ours { border-left-color: var(--andon); }
   .compare h3 { font-family: var(--display); font-size: 1.25rem; margin: 0 0 .5rem; }
   .compare p { margin: 0; font-size: 1rem; }
+  .compare p + p { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+  /* Sur grand écran, les rangées (titre, processus, IA) s'alignent d'un encadré à l'autre. */
+  @supports (grid-template-rows: subgrid) {
+    @media (min-width: 761px) {
+      .compare { grid-template-rows: auto auto auto; }
+      .compare div { display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: 0; }
+    }
+  }
+  .compare .slogan { font-family: var(--display); font-weight: 700; font-size: 1.2rem; line-height: 1.25; }
 
   .contact { background: var(--ink); color: var(--white); padding: 4.5rem 0; }
   .contact h2 { font-family: var(--display); font-size: clamp(1.9rem, 3.5vw, 2.6rem); margin: 0 0 1rem; max-width: 22ch; line-height: 1.1; }
@@ -247,23 +248,17 @@
       <div>
         <h3>L'approche habituelle</h3>
         <p>On choisit un logiciel, on l'installe, puis on adapte l'équipe à l'outil.</p>
+        <p>On met de l'IA partout, et les coûts deviennent vite exponentiels.</p>
       </div>
       <div class="ours">
         <h3>L'approche SMP</h3>
         <p>On simplifie le processus, puis on choisit ou construit l'outil qui s'adapte aux besoins de l'équipe.</p>
+        <p class="slogan">Le bon niveau d'IA, au bon endroit, en juste quantité.</p>
       </div>
     </div>
   </div>
 </section>
 
-<section class="juste" aria-labelledby="juste-titre">
-  <div class="wrap">
-    <div>
-      <h2 id="juste-titre">Le bon niveau d'IA, au bon endroit, en juste quantité.</h2>
-      <p>Mettre de l'IA partout, c'est s'embarquer dans des coûts qui deviennent vite exponentiels. Comme en Lean, on l'applique là où elle règle un problème mesuré, et nulle part ailleurs.</p>
-    </div>
-  </div>
-</section>
 
 <section class="block" id="calculateur">
   <div class="wrap">
