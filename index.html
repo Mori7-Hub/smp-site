@@ -98,7 +98,15 @@
   .contact p { max-width: 36rem; margin: 0 0 2rem; color: var(--line); }
   .contact .btn { background: var(--andon); color: var(--ink); }
   .contact .btn:hover { background: var(--white); }
-  .contact a.mail { color: var(--white); display: block; margin-top: 1rem; overflow-wrap: anywhere; }
+  .adresse { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; margin-top: 1.25rem; }
+  .adresse .mail { color: var(--white); user-select: all; -webkit-user-select: all; overflow-wrap: anywhere; cursor: text; }
+  .copier {
+    font: inherit; font-size: 1rem; font-weight: 500; color: var(--white); background: transparent;
+    border: 1px solid var(--line); border-radius: 2px; padding: .35rem .8rem; cursor: pointer;
+  }
+  .copier:hover { border-color: var(--andon); color: var(--andon); }
+  .copier:focus-visible { outline: 3px solid var(--andon); outline-offset: 3px; }
+  .copie-etat { font-size: .95rem; color: var(--andon); min-height: 1.5em; margin: .5rem 0 0; }
 
   footer { padding: 2rem 0; font-size: .95rem; color: var(--steel); }
 
@@ -191,7 +199,11 @@
     <h2>Parlons de votre production.</h2>
     <p>Décrivez-moi en quelques lignes ce qui vous ralentit. Je vous réponds avec une première lecture de la situation, sans engagement.</p>
     <a class="btn" href="mailto:antoine.morissette@smpsolutionsnumeriques.ca?subject=Demande%20de%20diagnostic">Écrire à Antoine</a>
-    <a class="mail" href="mailto:antoine.morissette@smpsolutionsnumeriques.ca">antoine.morissette@smpsolutionsnumeriques.ca</a>
+    <div class="adresse">
+      <span class="mail" id="adresse">antoine.morissette@smpsolutionsnumeriques.ca</span>
+      <button type="button" class="copier" id="copier">Copier l'adresse</button>
+    </div>
+    <p class="copie-etat" id="copie-etat" role="status" aria-live="polite"></p>
   </div>
 </section>
 
@@ -199,5 +211,37 @@
   <div class="wrap">SMP Solutions Numériques, entreprise basée en Beauce, Québec.</div>
 </footer>
 
+<script>
+  // Le bouton « Écrire à Antoine » ne fait rien sans logiciel de courriel installé :
+  // on offre donc de copier l'adresse. navigator.clipboard n'existe qu'en HTTPS,
+  // d'où le repli sur la sélection + execCommand.
+  (function () {
+    var bouton = document.getElementById('copier');
+    var adresse = document.getElementById('adresse');
+    var etat = document.getElementById('copie-etat');
+    function reussi() { etat.textContent = 'Adresse copiée. Collez-la dans votre courriel.'; }
+    function selectionner() {
+      var plage = document.createRange();
+      plage.selectNodeContents(adresse);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(plage);
+    }
+    function repli() {
+      selectionner();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) {}
+      etat.textContent = ok ? 'Adresse copiée. Collez-la dans votre courriel.'
+                            : 'Adresse sélectionnée : faites Ctrl+C pour la copier.';
+    }
+    bouton.addEventListener('click', function () {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(adresse.textContent).then(reussi, repli);
+      } else {
+        repli();
+      }
+    });
+  })();
+</script>
 </body>
 </html>
