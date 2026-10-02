@@ -89,9 +89,13 @@
   }
   .stream li:first-child::before { background: var(--andon); }
   .stream li.allume::before {
-    background: var(--andon); border-color: var(--andon); transform: scale(1.12);
+    background: var(--andon); border-color: var(--andon); transform: scale(1.25);
+    box-shadow: 0 0 0 7px rgba(242, 183, 5, .28);
     transition-duration: .2s; /* s'allume vite quand la barre arrive, s'éteint lentement */
   }
+  .stream li::before { transition-property: background-color, border-color, transform, box-shadow; }
+  .stream li h3 { transition: color .7s ease; }
+  .stream li.allume h3 { color: var(--steel); transition-duration: .2s; }
   /* Barre qui parcourt le trait une seule fois, derrière les pastilles (JS, désactivée si prefers-reduced-motion).
      Vitesse constante : le JS allume chaque pastille au moment où la barre l'atteint. */
   .stream__pulse {
@@ -403,7 +407,7 @@
     var chaine = document.getElementById('parcours');
     if (!chaine || !('IntersectionObserver' in window)) return;
     var pastilles = chaine.querySelectorAll('ol > li');
-    var DUREE = 1800; // ms, doit rester égal à --duree-ligne
+    var DUREE = 2400; // ms, doit rester égal à --duree-ligne
     chaine.style.setProperty('--duree-ligne', DUREE + 'ms');
 
     function demarrer() {
@@ -417,10 +421,13 @@
         var arrivee = Math.max(0, Math.min(1, position / longueur)) * DUREE;
         setTimeout(function () {
           li.classList.add('allume');
-          setTimeout(function () { li.classList.remove('allume'); }, 450);
         }, arrivee);
       });
-      setTimeout(function () { chaine.classList.add('fini'); }, DUREE + 150);
+      // Toute la ligne reste allumée un instant (« la ligne tourne »), puis revient au repos ensemble.
+      setTimeout(function () {
+        pastilles.forEach(function (li) { li.classList.remove('allume'); });
+        chaine.classList.add('fini');
+      }, DUREE + 600);
     }
 
     var observateur = new IntersectionObserver(function (entrees) {
