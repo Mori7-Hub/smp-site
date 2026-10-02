@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SMP Solutions numériques — Optimiser vos processus, puis les automatiser</title>
+<title>SMP Solutions Numériques — Optimiser vos processus, puis les automatiser</title>
 <meta name="description" content="Accompagnement Lean, implantation de logiciels, automatisation et IA pour les PME manufacturières de la Beauce.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%231F2A33'/><rect x='7' y='14' width='18' height='4' fill='%23F2B705'/></svg>">
+<link rel="icon" type="image/svg+xml" href="marque/logo-c-repere-symbole.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
@@ -40,7 +40,9 @@
     padding: 1.25rem 0;
   }
   .brand { font-family: var(--display); font-weight: 700; font-size: 1.25rem; color: var(--ink); text-decoration: none; }
-  .brand span { display: inline-block; width: 1.4rem; height: .35rem; background: var(--andon); margin-right: .5rem; vertical-align: middle; }
+  .brand { display: inline-flex; align-items: center; gap: .6rem; font-size: 1.6rem; line-height: 1; }
+  .brand svg { width: 2.1rem; height: 2.1rem; flex: none; }
+  .brand small { font-family: var(--body); font-weight: 500; font-size: 1rem; border-left: 1.5px solid var(--ink); padding-left: .6rem; }
   nav a { margin-left: 1.5rem; text-decoration: none; color: var(--ink); font-weight: 500; }
   nav a:hover { color: var(--steel); }
 
@@ -109,13 +111,18 @@
     .stream h3 { margin-top: 0; }
     .cols, .compare { grid-template-columns: 1fr; gap: 1.5rem; }
   }
+  @media (max-width: 400px) {
+    .brand { font-size: 1.35rem; gap: .5rem; }
+    .brand small { font-size: .9rem; padding-left: .5rem; }
+    .brand svg { width: 1.8rem; height: 1.8rem; }
+  }
 </style>
 </head>
 <body>
 
 <div class="wrap">
   <header class="top">
-    <a class="brand" href="#"><span aria-hidden="true"></span>SMP Solutions numériques</a>
+    <a class="brand" href="#"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8,26 L8,8 L26,8" fill="none" stroke="#1F2A33" stroke-width="8" stroke-linecap="square"/><path d="M56,38 L56,56 L38,56" fill="none" stroke="#1F2A33" stroke-width="8" stroke-linecap="square"/><circle cx="32" cy="32" r="6" fill="#F2B705"/></svg>SMP <small>Solutions Numériques</small></a>
     <nav aria-label="Navigation principale">
       <a href="#parcours">Services</a>
       <a href="#approche">Approche</a>
@@ -189,7 +196,7 @@
 </section>
 
 <footer>
-  <div class="wrap">SMP Solutions numériques, entreprise basée en Beauce, Québec.</div>
+  <div class="wrap">SMP Solutions Numériques, entreprise basée en Beauce, Québec.</div>
 </footer>
 
 </body>
