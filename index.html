@@ -129,6 +129,14 @@
   .calc-note { margin: 1rem 0 0; font-size: .85rem; color: var(--steel); }
 
   section.block { padding: 4.5rem 0; border-top: 1px solid var(--line); }
+  /* Bandeau « juste quantité » : le pendant IA de la phrase de l'Approche. */
+  .juste { background: var(--white); border-top: 1px solid var(--line); padding: 3.5rem 0; }
+  .juste .wrap > div { border-left: 6px solid var(--andon); padding-left: 1.5rem; }
+  .juste h2 {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(1.9rem, 3.5vw, 2.6rem); line-height: 1.1; margin: 0 0 1rem; max-width: 24ch;
+  }
+  .juste p { margin: 0; max-width: 40rem; }
   section.block h2 {
     font-family: var(--display); font-weight: 700;
     font-size: clamp(1.9rem, 3.5vw, 2.6rem); line-height: 1.1; margin: 0 0 1.25rem; max-width: 22ch;
@@ -244,6 +252,15 @@
         <h3>L'approche SMP</h3>
         <p>On simplifie le processus, puis on choisit ou construit l'outil qui s'adapte aux besoins de l'équipe.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="juste" aria-labelledby="juste-titre">
+  <div class="wrap">
+    <div>
+      <h2 id="juste-titre">Le bon niveau d'IA, au bon endroit, en juste quantité.</h2>
+      <p>Mettre de l'IA partout, c'est s'embarquer dans des coûts qui deviennent vite exponentiels. Comme en Lean, on l'applique là où elle règle un problème mesuré, et nulle part ailleurs.</p>
     </div>
   </div>
 </section>
