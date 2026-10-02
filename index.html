@@ -146,7 +146,10 @@
   .maxime h3 { font-family: var(--display); font-size: 1.25rem; line-height: 1.25; margin: 0 0 .5rem; }
   .maxime p { margin: 0; font-size: 1rem; }
   /* Dans la section Contact, la maxime occupe la colonne de droite ; elle garde sa facture d'encadré clair. */
-  .contact-grille { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 3rem; align-items: center; }
+  .contact-grille { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3rem; align-items: center; }
+  /* Le titre de la maxime tient sur une ligne quand l'écran le permet ; l'encadré s'élargit en conséquence. */
+  @media (min-width: 1000px) { .contact .maxime h3 { white-space: nowrap; } .contact .maxime { max-width: 34rem; } }
+  @media (min-width: 761px) and (max-width: 999px) { .contact-grille { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
   .contact .maxime { margin-top: 0; color: var(--ink); }
   .contact .maxime p { color: var(--ink); margin: 0; max-width: none; }
   @media (max-width: 760px) { .contact-grille { grid-template-columns: 1fr; gap: 1rem; } }
